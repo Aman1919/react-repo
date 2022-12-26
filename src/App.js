@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useState } from "react";
+import Card from "./card";
 function App() {
+  const [data, setData] = useState([]);
+  const [inpt, setInput] = useState("");
+  // useEffect(() => {
+  // async function getapi() {
+  // // const res = await fetch("https://jsonplaceholder.typicode.com/users");
+  // let a = await res.json();
+  // setData(a);
+  // }
+  // getapi();
+  // }, []);
+  function getapi() {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((users) => setData(users));
+    // getting fetching data from api
+  }
+  getapi();
+  // In filterdata filtering data through checking inpt and name whose should be included
+  const filterData = data.filter((d) => {
+    return (
+      d.name.toLowerCase().includes(inpt.toLowerCase()) ||
+      d.email.toLowerCase().includes(inpt.toLowerCase())
+    );
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1 className="header">RoboFriends</h1>
+      <div className="inpt">
+        <h1>{inpt}</h1>
+        <input
+          type="text"
+          onChange={(e) => {
+            setInput(e.target.value);
+          }}
+          placeholder="Search through names"
+        />
+      </div>
+      <Card carddata={filterData} />
     </div>
   );
 }
